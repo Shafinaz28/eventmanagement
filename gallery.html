@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maya Events - Portfolio Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gray-850': '#1f2937',
+                        'gray-950': '#0f172a',
+                        'maya-teal': '#20c997',
+                        'maya-blue': '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body { width: 100%; margin: 0; padding: 0; overflow-x: hidden; box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: inherit; }
+
+        /* Unified Hero Style */
+        .bg-hero {
+            background-image: url('./services/bgwrkimg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 60vh;
+        }
+
+        /* Unified Hamburger Button */
+        .custom-hamburger {
+            width: 60px; height: 60px; background-color: white;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+        .custom-hamburger .bar { background-color: black; }
+
+        /* Navigation Drawer */
+        #off-canvas-menu { transition: transform 0.3s ease-out; }
+        #off-canvas-menu.hidden-menu { transform: translateX(100%); }
+
+        /* Gallery Grid Styles */
+        .gallery-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery-thumbnail {
+            position: relative; overflow: hidden; border-radius: 0.75rem;
+            aspect-ratio: 16/9; cursor: pointer; background-color: #1a202c;
+            opacity: 0; transform: translateY(30px);
+        }
+        .gallery-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
+        .name-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+            display: flex; align-items: flex-end; padding: 1.5rem;
+        }
+        .gallery-thumbnail:hover img { transform: scale(1.1); }
+
+        /* 3D Lightbox Carousel */
+        #lightbox { background-color: rgba(0, 0, 0, 0.98); display: none; z-index: 200; opacity: 0; }
+        .carousel-container {
+            position: relative; width: 100%; height: 400px;
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1000px; transform-style: preserve-3d;
+        }
+        .carousel-item {
+            position: absolute; width: 450px; height: 300px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* 3D States */
+        .selected { transform: translate3d(0, 0, 0); z-index: 10; opacity: 1; }
+        .prev { transform: translate3d(-50%, 0, -150px) rotateY(25deg); z-index: 5; opacity: 0.6; }
+        .next { transform: translate3d(50%, 0, -150px) rotateY(-25deg); z-index: 5; opacity: 0.6; }
+        .prevLeftSecond { transform: translate3d(-80%, 0, -300px) rotateY(35deg); z-index: 2; opacity: 0.2; }
+        .nextRightSecond { transform: translate3d(80%, 0, -300px) rotateY(-35deg); z-index: 2; opacity: 0.2; }
+        .hideLeft { transform: translate3d(-120%, 0, -500px); opacity: 0; }
+        .hideRight { transform: translate3d(120%, 0, -500px); opacity: 0; }
+
+        .nav-control {
+            background: #3b82f6; color: white; padding: 10px 25px;
+            border-radius: 99px; font-weight: 600; transition: 0.3s;
+        }
+        .nav-control:hover { background: #20c997; transform: translateY(-2px); }
+
+        @media (max-width: 768px) {
+            .carousel-item { width: 300px; height: 200px; }
+            .carousel-container { height: 300px; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white font-sans antialiased">
+
+    <header class="fixed top-0 w-full z-50 bg-transparent py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+            <div class="flex items-center">
+                <a href="index.html">
+                    <img id="logo-main" src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-16 w-auto">
+                </a>
+            </div>
+            <button id="menu-toggle-button" class="relative custom-hamburger">
+                <div class="space-y-1.5 w-8 h-8 flex flex-col justify-center items-center">
+                    <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
+                    <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
+                    <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <div id="off-canvas-menu" class="fixed inset-y-0 right-0 w-64 max-w-[85%] sm:w-96 bg-gray-950/95 backdrop-blur-xl z-[90] shadow-2xl p-6 hidden-menu">
+        <div class="flex justify-end mb-10">
+            <button id="menu-close-button" class="text-white hover:text-teal-400 transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <nav class="space-y-6 text-xl">
+            <a href="index.html" class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
+                <i class="fas fa-home w-6 mr-3"></i> Home
+            </a>
+            <a href="about.html" class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
+                <i class="fas fa-info-circle w-6 mr-3"></i> About
+            </a>
+            <a href="services.html" class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
+                <i class="fas fa-briefcase w-6 mr-3"></i> Services
+            </a>
+            <a href="gallery.html" class="block text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
+                <i class="fas fa-images w-6 mr-3"></i> Gallery
+            </a>
+            <a href="contact.html" class="block text-white hover:text-teal-400 transition-colors menu-link">
+                <i class="fas fa-envelope w-6 mr-3"></i> Contact
+            </a>
+        </nav>
+        <div class="mt-12 pt-6 border-t border-white/10">
+            <h4 class="text-lg font-semibold mb-3 text-blue-400">Request a Quote</h4>
+            <a href="contact.html" class="w-full inline-block text-center px-6 py-3 text-white bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg transition-all">
+                Plan Your Event
+            </a>
+        </div>
+    </div>
+    <div id="menu-backdrop" class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300"></div>
+
+    <main>
+        <section id="home" class="bg-hero relative flex items-center justify-center min-h-[50vh]">
+            <div class="absolute inset-0 bg-black/60"></div>
+            <div id="hero-content" class="relative max-w-4xl mx-auto px-4 text-center py-24 sm:py-32 pt-28">
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">Event Portfolio</h1>
+                <p class="mt-4 text-lg text-gray-200 max-w-2xl mx-auto">
+                    Experience excellence through our captured moments. From corporate launches to celebratory milestones, explore our technical and creative mastery.
+                </p>
+            </div>
+        </section>
+
+        <section class="py-20 px-4 bg-gray-900">
+            <div class="max-w-7xl mx-auto">
+                <div id="gallery-container" class="gallery-grid-layout">
+                    <div class="gallery-thumbnail" data-category="kohler">
+                        <img src="event hotos/kohler/1.jpg" alt="Kohler Event">
+                        <div class="name-overlay"><span class="text-xl font-bold">Kohler 150Yrs Celebrations</span></div>
+                    </div>
+                    <div class="gallery-thumbnail" data-category="sunwa">
+                        <img src="event hotos/sunwa/1.jpg" alt="Sunwa Event">
+                        <div class="name-overlay"><span class="text-xl font-bold">Sunwa Opening Ceremony</span></div>
+                    </div>
+                    <div class="gallery-thumbnail" data-category="widma">
+                        <img src="event hotos/widma/1.jpg" alt="Widma Event">
+                        <div class="name-overlay"><span class="text-xl font-bold">Widma Brand Launch</span></div>
+                    </div>
+                    <div class="gallery-thumbnail" data-category="kennametal">
+                        <img src="event hotos/kennametal/1.jpg" alt="Kennametal Event">
+                        <div class="name-overlay"><span class="text-xl font-bold">Kennametal Long Service Awards</span></div>
+                    </div>
+                    <div class="gallery-thumbnail" data-category="stalls">
+                        <img src="event hotos/stall/1.jpg" alt="stall Event">
+                        <div class="name-overlay"><span class="text-xl font-bold">Exhibition Stalls</span></div>
+                    </div>
+                    <div class="gallery-thumbnail" data-category="bayers">
+                        <img src="event hotos/bayers annual meet/1.jpg" alt="Bayers Event">
+                        <div class="name-overlay"><span class="text-xl font-bold">Bayers Annual Meet</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="hidden">
+            <div class="slide-pool" data-category="kohler">
+                <img src="event hotos/kohler/1.jpg"><img src="event hotos/kohler/2.jpg"><img src="event hotos/kohler/3.jpg"><img src="event hotos/kohler/4.jpg"><img src="event hotos/kohler/5.jpg">
+            </div>
+            <div class="slide-pool" data-category="sunwa">
+                <img src="event hotos/sunwa/1.jpg"><img src="event hotos/sunwa/2.jpg"><img src="event hotos/sunwa/3.jpg"><img src="event hotos/sunwa/4.jpg"><img src="event hotos/sunwa/5.jpg">
+            </div>
+            <div class="slide-pool" data-category="widma">
+                <img src="event hotos/widma/1.jpg"><img src="event hotos/widma/2.jpg"><img src="event hotos/widma/3.jpg">
+            </div>
+            <div class="slide-pool" data-category="kennametal">
+                <img src="event hotos/kennametal/1.jpg"><img src="event hotos/kennametal/2.jpg"><img src="event hotos/kennametal/3.jpg"><img src="event hotos/kennametal/4.jpg"><img src="event hotos/kennametal/5.jpg">
+            </div>
+            <div class="slide-pool" data-category="stalls">
+                <img src="event hotos/stall/1.jpg"><img src="event hotos/stall/2.jpg"><img src="event hotos/stall/3.jpg"><img src="event hotos/stall/4.jpg"><img src="event hotos/stall/5.jpg">
+            </div>
+            <div class="slide-pool" data-category="bayers">
+                <img src="event hotos/bayers annual meet/1.jpg"><img src="event hotos/bayers annual meet/2.jpg"><img src="event hotos/bayers annual meet/3.jpg"><img src="event hotos/bayers annual meet/4.jpg"><img src="event hotos/bayers annual meet/5.jpg">
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 border-t border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <img src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-12 w-auto mb-4">
+                    <p class="text-gray-400 mb-4">Crafting Experiences, Igniting Emotions.</p>
+                    <p class="text-gray-400 text-sm">
+                        Your premier partner for exceptional event planning, creative services, and brand experiences. A
+                        proud unit of Trivexa Events and Promotions Pvt. Ltd.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-blue-400 transition-colors">Home</a>
+                        </li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-blue-400 transition-colors">About Us</a>
+                        </li>
+                        <li><a href="service.html" class="text-gray-400 hover:text-blue-400 transition-colors">Services</a></li>
+                        <li><a href="gallery.html" class="text-gray-400 hover:text-blue-400 transition-colors">Portfolio</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-blue-400 transition-colors">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>📍 Bengaluru, Karnataka</li>
+                        <li>📞 +91 866 029 6047</li>
+                        <li>✉️ connect@mayaevents.in</li>
+                        <li>🕒 Mon - Fri: 9AM - 6PM IST</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Stay Connected</h4>
+                    <p class="text-gray-400 mb-4 text-sm">Follow our journey of creative transformation.</p>
+                    <div class="flex space-x-4 text-2xl">
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                                class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">© 2025 Maya Adfinity. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="lightbox" class="fixed inset-0 flex flex-col items-center justify-center">
+        <button onclick="closeLightbox()" class="absolute top-10 right-10 text-white text-4xl hover:text-maya-blue"><i class="fas fa-times"></i></button>
+        <h3 id="lightbox-title" class="text-2xl font-bold text-maya-teal mb-8"></h3>
+        <div id="carousel" class="carousel-container"></div>
+        <div class="flex gap-6 mt-12">
+            <button class="nav-control" onclick="moveStack(-1)">PREVIOUS</button>
+            <button class="nav-control" onclick="moveStack(1)">NEXT</button>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // Navigation Logic
+        const menu = document.getElementById('off-canvas-menu');
+        const backdrop = document.getElementById('menu-backdrop');
+        const menuToggle = document.getElementById('menu-toggle-button');
+        const menuClose = document.getElementById('menu-close-button');
+        const menuLinks = document.querySelectorAll('.menu-link');
+
+        const menuTimeline = gsap.timeline({ paused: true });
+        menuTimeline.from(menuLinks, { x: 50, opacity: 0, duration: 0.6, ease: "power1.out", stagger: 0.15 });
+
+        function openMenu() {
+            menu.classList.remove('hidden-menu');
+            backdrop.classList.replace('invisible', 'visible');
+            backdrop.classList.replace('opacity-0', 'opacity-100');
+            document.body.style.overflow = 'hidden';
+            menuTimeline.play(0);
+        }
+
+        function closeMenu() {
+            menuTimeline.reverse().then(() => {
+                menu.classList.add('hidden-menu');
+                backdrop.classList.replace('visible', 'invisible');
+                backdrop.classList.replace('opacity-100', 'opacity-0');
+                document.body.style.overflow = '';
+            });
+        }
+
+        menuToggle.onclick = openMenu;
+        menuClose.onclick = closeMenu;
+        backdrop.onclick = closeMenu;
+
+        // Gallery & Lightbox Logic
+        const lightbox = document.getElementById('lightbox');
+        const carousel = document.getElementById('carousel');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        let stackData = [];
+        let currentIndex = 0;
+
+        document.querySelectorAll('.gallery-thumbnail').forEach((thumb) => {
+            thumb.onclick = () => {
+                const category = thumb.getAttribute('data-category');
+                const title = thumb.querySelector('.name-overlay span').innerText;
+                const pool = document.querySelector(`.slide-pool[data-category="${category}"]`);
+                stackData = Array.from(pool.querySelectorAll('img')).map(img => img.src);
+                currentIndex = 0;
+                renderStack(title);
+                lightbox.style.display = 'flex';
+                gsap.to(lightbox, { opacity: 1, duration: 0.5 });
+                document.body.style.overflow = 'hidden';
+            };
+        });
+
+        function renderStack(title) {
+            carousel.innerHTML = '';
+            lightboxTitle.innerText = title;
+            stackData.forEach((src) => {
+                const div = document.createElement('div');
+                div.className = 'carousel-item';
+                div.innerHTML = `<img src="${src}">`;
+                carousel.appendChild(div);
+            });
+            updateStackClasses();
+        }
+
+        function updateStackClasses() {
+            const items = document.querySelectorAll('.carousel-item');
+            const total = items.length;
+            items.forEach((item, i) => {
+                item.className = 'carousel-item';
+                if (i === currentIndex) item.classList.add('selected');
+                else if (i === (currentIndex - 1 + total) % total) item.classList.add('prev');
+                else if (i === (currentIndex + 1) % total) item.classList.add('next');
+                else if (i === (currentIndex - 2 + total) % total) item.classList.add('prevLeftSecond');
+                else if (i === (currentIndex + 2) % total) item.classList.add('nextRightSecond');
+                else if (i < currentIndex) item.classList.add('hideLeft');
+                else item.classList.add('hideRight');
+            });
+        }
+
+        window.moveStack = (dir) => {
+            currentIndex = (currentIndex + dir + stackData.length) % stackData.length;
+            updateStackClasses();
+        };
+
+        window.closeLightbox = () => {
+            gsap.to(lightbox, { opacity: 0, duration: 0.3, onComplete: () => {
+                lightbox.style.display = 'none';
+                document.body.style.overflow = '';
+            }});
+        };
+
+        // Page Entrance
+        gsap.from("#hero-content > *", { opacity: 0, y: 30, stagger: 0.2, duration: 1, ease: "power2.out" });
+        
+        // Scroll Trigger for Gallery Items
+        gsap.utils.toArray('.gallery-thumbnail').forEach(thumb => {
+            gsap.to(thumb, {
+                scrollTrigger: {
+                    trigger: thumb,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1
+            });
+        });
+    </script>
+</body>
+</html>
