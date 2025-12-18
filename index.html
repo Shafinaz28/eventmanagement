@@ -2,71 +2,34 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maya Adfinity - Event & Brand Experience Agency (Home)</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maya Events - Portfolio Gallery</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'gray-850': '#1f2937',
-                        'gray-950': '#0f172a',
-                        'maya-dark': '#121926',
-                    },
-                    animation: {
-                        'contactOverlayZoom': 'contactOverlayZoom 1.5s ease-out 1.5s forwards',
-                        'slideInFromTop': 'slideInFromTop 1.2s ease-out forwards',
-                        /* Marquee animation speed defined here */
-                        'scrolling-marquee': 'scrolling-carousel 45s linear infinite',
-                    },
-                    keyframes: {
-                        slideInFromTop: {
-                            '0%': {
-                                transform: 'translateY(-50px)',
-                                opacity: '0'
-                            },
-                            '100%': {
-                                transform: 'translateY(0)',
-                                opacity: '1'
-                            },
-                        },
-                        contactOverlayZoom: {
-                            '0%': {
-                                transform: 'translate(-50%, -50%) scale(0.8)',
-                                opacity: '0'
-                            },
-                            '100%': {
-                                transform: 'translate(-50%, -50%) scale(1)',
-                                opacity: '1'
-                            },
-                        },
-                        'scrolling-carousel': {
-                            '0%': {
-                                transform: 'translateX(0)'
-                            },
-                            '100%': {
-                                /* The content consists of Group 1 + Group 2 (identical copy).
-                                                                Translating -50% moves exactly one copy of the content, creating a seamless loop. */
-                                transform: 'translateX(-50%)'
-                            }
-                        }
+                        "gray-950": "#0f172a",
+                        "maya-blue": "#00A0E3",
+                        "maya-dark": "#2b2b2b"
                     }
                 }
             }
-        }
+        };
     </script>
+
     <style>
-        /* FIX 1: Aggressive Mobile Reset to prevent horizontal overflow/scroll issues */
         html,
         body {
             width: 100%;
-            min-width: 100%;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
@@ -78,7 +41,52 @@
         *::after {
             box-sizing: inherit;
         }
+        .custom-hamburger {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00A0E3, #2b2b2b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+            transition: transform .2s ease, filter .2s ease;
+        }
 
+        .custom-hamburger:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .hamburger-lines {
+            width: 30px;
+            height: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hamburger-lines span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            /* bold */
+            background: #fff;
+            /* white */
+            border-radius: 999px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+        }
+
+        /* Off-canvas */
+        #off-canvas-menu {
+            transition: transform .3s ease-out;
+        }
+
+        #off-canvas-menu.hidden-menu {
+            transform: translateX(100%);
+        }
         /* --- General Styles --- */
         body {
             transition: overflow 0.3s;
@@ -537,66 +545,83 @@
     </style>
 
 </head>
+<body class="bg-gray-900 text-white font-sans antialiased">
 
-<body class="bg-gray-900 text-white">
-
+    <!-- Header -->
     <header class="fixed top-0 w-full z-50 bg-transparent py-3">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
             <div class="flex items-center">
                 <a href="index.html">
-                    <img src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-16 w-auto">
+                    <img id="logo-main" src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-16 w-auto">
                 </a>
             </div>
 
-            <div>
-                <button id="menu-toggle-button" class="relative custom-hamburger">
-                    <div class="space-y-1.5 w-8 h-8 flex flex-col justify-center items-center">
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                    </div>
-                </button>
-            </div>
+            <button id="menu-toggle-button" class="custom-hamburger" aria-label="Open Menu">
+                <div class="hamburger-lines">
+                    <span></span><span></span><span></span>
+                </div>
+            </button>
         </div>
     </header>
 
-    <div id="off-canvas-menu"
-        class="fixed inset-y-0 right-0 w-64 max-w-[85%] sm:w-96 bg-maya-dark backdrop-blur-xl z-[90] shadow-2xl p-6 hidden-menu">
-        <div class="flex justify-end mb-10">
-            <button id="menu-close-button" class="text-white hover:text-teal-400 transition-colors">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
-        </div>
+    <!-- Off-canvas menu -->
+    <!-- Off-canvas menu -->
+<div id="off-canvas-menu"
+  class="fixed inset-y-0 right-0 w-64 max-w-[85%] sm:w-96 bg-gray-950/95 backdrop-blur-xl z-[90] shadow-2xl p-6 hidden-menu">
 
-        <nav id="off-canvas-nav" class="space-y-1 text-xl">
-            <a href="index.html" class="text-white hover:text-teal-400 transition-colors menu-link block">
-                <i class="fas fa-home w-6 mr-3"></i> Home
-            </a>
-            <a href="about.html" class="text-white hover:text-teal-400 transition-colors menu-link block">
-                <i class="fas fa-info-circle w-6 mr-3"></i> About
-            </a>
-            <a href="services.html" class="text-white hover:text-teal-400 transition-colors menu-link block">
-                <i class="fas fa-briefcase w-6 mr-3"></i> Services
-            </a>
-            <a href="gallery.html" class="text-white hover:text-teal-400 transition-colors menu-link block">
-                <i class="fas fa-image w-6 mr-3"></i> Gallery
-            </a>
-            <a href="contact.html" class="text-white hover:text-teal-400 transition-colors menu-link block">
-                <i class="fas fa-envelope w-6 mr-3"></i> Contact
-            </a>
-            <div class="border-t border-white/10 mt-8 pt-4"></div>
-        </nav>
+  <div class="flex justify-end mb-10">
+    <button id="menu-close-button" class="text-white hover:text-cyan-300 transition-colors" aria-label="Close Menu">
+      <i class="fas fa-times text-2xl"></i>
+    </button>
+  </div>
 
-        <div class="mt-4 pt-4">
-            <h4 class="text-lg font-semibold mb-3 text-blue-400">Get Started</h4>
-            <a onclick="openModal()"
-                class="cursor-pointer w-full inline-block text-center px-6 py-3 text-white bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg transition-all hover:opacity-90">
-                Plan Your Event
-            </a>
-        </div>
-    </div>
-    <div id="menu-backdrop" class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300">
-    </div>
+  <!-- ✅ IMPORTANT: add this id -->
+  <nav id="off-canvas-nav" class="space-y-6 text-xl">
+    <!-- ✅ ACTIVE PAGE: Gallery -->
+    <a href="index.html"
+      class="block text-cyan-300 font-semibold transition-colors border-b border-white/10 pb-4 menu-link">
+      <i class="fas fa-images w-7 mr-3"></i> Home
+    </a>
+
+    <a href="about.html"
+      class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+      <i class="fas fa-circle-info w-7 mr-3"></i> About
+    </a>
+
+    <a href="services.html"
+      class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+      <i class="fas fa-briefcase w-7 mr-3"></i> Services
+    </a>
+
+<a href="gallery.html"
+      class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+      <i class="fas fa-envelope w-7 mr-3"></i> Gallery
+    </a>
+    <a href="contact.html"
+      class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+      <i class="fas fa-envelope w-7 mr-3"></i> Contact
+    </a>
+  </nav>
+
+  <!-- ✅ Request a Quote after navbar -->
+  <!-- <div class="mt-10 pt-6 border-t border-white/10">
+    <h4 class="text-lg font-semibold mb-4 text-cyan-300 flex items-center gap-2">
+      <i class="fas fa-pen-to-square"></i> Request a Quote
+    </h4>
+
+    <a href="contact.html"
+      class="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-white rounded-lg transition-all font-semibold"
+      style="background: linear-gradient(135deg, #00A0E3, #2b2b2b);">
+      <i class="fas fa-calendar-check"></i> Plan Your Event
+    </a>
+  </div> -->
+</div>
+
+<!-- Backdrop -->
+<div id="menu-backdrop"
+  class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300"></div>
+
+    <main>
 
     <div id="contact-modal"
         class="modal fixed inset-0 z-[100] bg-gray-900/70 backdrop-blur-md flex items-center justify-center opacity-0 invisible transition-opacity duration-300 ease-out">
@@ -639,7 +664,7 @@
     <section id="about" class="py-20 bg-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 scroll-animated-element about-title-block">
-                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-blue-400">MAYA ADFINITY: The Creative Powerhouse
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-blue-400"> The Creative Powerhouse
                 </h2>
                 <p class="text-lg text-gray-300 max-w-3xl mx-auto">
                     At Maya Adfinity, we don’t just plan events — we craft experiences, ignite emotions, and bring
@@ -650,7 +675,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="scroll-animated-element about-text-content">
-                    <h3 class="text-2xl font-bold mb-4 text-white">Our Vision: Transformative Experiences</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-white">Our Vision Transformative Experiences</h3>
                     <blockquote class="border-l-4 border-teal-400 pl-4 py-2 mb-6 italic text-gray-300">
                         "To deliver innovative and transformative experiences with lasting positive impact, leading the
                         live entertainment industry toward a vibrant and lasting future."
@@ -856,7 +881,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
             <h2 class="text-4xl md:text-5xl font-bold mb-12 text-teal-400 scroll-animated-element">
-                Our Event Portfolio: Experiences Brought to Life
+                Our Events Portfolio
             </h2>
 
             <p class="text-lg text-gray-400 mb-8 max-w-3xl mx-auto scroll-animated-element">
@@ -989,67 +1014,73 @@
         </div>
     </section>
 
-    <footer class="bg-gray-800 border-t border-gray-700">
+     <footer class="bg-gray-800 border-t border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
                 <div>
                     <img src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-12 w-auto mb-4">
-                    <p class="text-gray-400 mb-4">Crafting Experiences, Igniting Emotions.</p>
+                    <p class="text-gray-300 mb-2"><i class="fas fa-wand-magic-sparkles mr-2"></i>Crafting Experiences,
+                        Igniting Emotions.</p>
                     <p class="text-gray-400 text-sm">
-                        Your premier partner for exceptional event planning, creative services, and brand experiences. A
-                        proud unit of Trivexa Events and Promotions Pvt. Ltd.
+                        <i class="fas fa-circle-info mr-2"></i>
+                        Your premier partner for exceptional event planning, creative services, and brand experiences.
+                        A proud unit of Trivexa Events and Promotions Pvt. Ltd.
                     </p>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-400 hover:text-blue-400 transition-colors">Home</a>
-                        </li>
-                        <li><a href="about.html" class="text-gray-400 hover:text-blue-400 transition-colors">About
-                                Us</a>
-                        </li>
-                        <li><a href="service.html"
-                                class="text-gray-400 hover:text-blue-400 transition-colors">Services</a></li>
-                        <li><a href="gallery.html"
-                                class="text-gray-400 hover:text-blue-400 transition-colors">Portfolio</a></li>
-                        <li><a href="contact.html"
-                                class="text-gray-400 hover:text-blue-400 transition-colors">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-semibold mb-4">Contact Us</h4>
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-link mr-2"></i>Quick Links</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li>📍 Bengaluru, Karnataka</li>
-                        <li>📞 +91 866 029 6047</li>
-                        <li>✉️ connect@mayaevents.in</li>
-                        <li>🕒 Mon - Fri: 9AM - 6PM IST</li>
+                        <li><i class="fas fa-house mr-2"></i><a href="index.html"
+                                class="hover:text-cyan-300 transition-colors">Home</a></li>
+                        <li><i class="fas fa-circle-info mr-2"></i><a href="about.html"
+                                class="hover:text-cyan-300 transition-colors">About Us</a></li>
+                        <li><i class="fas fa-briefcase mr-2"></i><a href="services.html"
+                                class="hover:text-cyan-300 transition-colors">Services</a></li>
+                        <li><i class="fas fa-images mr-2"></i><a href="gallery.html"
+                                class="hover:text-cyan-300 transition-colors">Portfolio</a></li>
+                        <li><i class="fas fa-envelope mr-2"></i><a href="contact.html"
+                                class="hover:text-cyan-300 transition-colors">Contact</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Stay Connected</h4>
-                    <p class="text-gray-400 mb-4 text-sm">Follow our journey of creative transformation.</p>
-                    <div class="flex space-x-4 text-2xl">
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-address-card mr-2"></i>Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-location-dot mr-2"></i>Bengaluru, Karnataka</li>
+                        <li><i class="fas fa-phone mr-2"></i>+91 866 029 6047</li>
+                        <li><i class="fas fa-envelope-open-text mr-2"></i>connect@mayaevents.in</li>
+                        <li><i class="fas fa-clock mr-2"></i>Mon - Fri: 9AM - 6PM IST</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-signal mr-2"></i>Stay Connected</h4>
+                    <p class="text-gray-400 mb-4 text-sm"><i class="fas fa-heart mr-2"></i>Follow our journey of
+                        creative transformation.</p>
+                    <div class="flex space-x-5 text-2xl">
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="Facebook"><i
                                 class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
-                                class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors"
+                            aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="LinkedIn"><i
                                 class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="YouTube"><i
                                 class="fab fa-youtube"></i></a>
                     </div>
                 </div>
+
             </div>
 
             <div class="border-t border-gray-700 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm">© 2025 Maya Adfinity. All rights reserved.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Terms of Service</a>
+                <p class="text-gray-400 text-sm"><i class="fas fa-copyright mr-2"></i>2025 Maya Adfinity. All rights
+                    reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-gray-400">
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i
+                            class="fas fa-shield-halved mr-2"></i>Privacy Policy</a>
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i
+                            class="fas fa-file-contract mr-2"></i>Terms of Service</a>
                 </div>
             </div>
         </div>
@@ -1059,157 +1090,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            gsap.registerPlugin(ScrollTrigger);
+  document.addEventListener("DOMContentLoaded", () => {
+    gsap.registerPlugin(ScrollTrigger);
 
-            // --- 1. VIDEO SOUND & SCROLL LOGIC ---
-            const video = document.getElementById('hero-video');
-            const unmuteBtn = document.getElementById('unmute-button');
+    const menu = document.getElementById("off-canvas-menu");
+    const menuToggle = document.getElementById("menu-toggle-button");
+    const menuClose = document.getElementById("menu-close-button");
+    const menuBackdrop = document.getElementById("menu-backdrop");
+    const menuLinks = document.querySelectorAll("#off-canvas-nav .menu-link");
 
-            if (unmuteBtn && video) {
-                unmuteBtn.addEventListener('click', () => {
-                    if (video.muted) {
-                        video.muted = false;
-                        video.volume = 0.5;
-                        unmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i> <span class="text-sm font-bold">Mute</span>';
-                    } else {
-                        video.muted = true;
-                        unmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i> <span class="text-sm font-bold">Tap for Sound</span>';
-                    }
-                });
-            }
+    const menuTimeline = gsap.timeline({ paused: true });
+    menuTimeline.from(menuLinks, {
+      x: 50,
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.out",
+      stagger: 0.08
+    });
 
-            ScrollTrigger.create({
-                trigger: "#about",
-                start: "top bottom",
-                onEnter: () => {
-                    if (video) {
-                        video.muted = true;
-                        if (unmuteBtn) unmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i> <span class="text-sm font-bold">Tap for Sound</span>';
-                    }
-                }
-            });
-
-// --- Testimonial Slider Logic ---
-const track = document.getElementById("slider-track");
-const cards = document.querySelectorAll(".testimonial-card");
-const nextBtn = document.getElementById("nextBtn");
-const prevBtn = document.getElementById("prevBtn");
-let index = 0;
-
-function updateSlider() {
-    // Determine how many cards are shown based on screen width
-    const visibleCards = window.innerWidth <= 1024 ? 1 : 2;
-    
-    // Get the width of one card plus its margin (20px total)
-    const cardWidth = cards[0].offsetWidth + 20; 
-    
-    // Calculate the max index to prevent empty space at the end
-    const maxIndex = cards.length - visibleCards;
-    
-    if (index > maxIndex) index = maxIndex;
-    if (index < 0) index = 0;
-
-    track.style.transform = `translateX(-${index * cardWidth}px)`;
-}
-
-nextBtn.onclick = () => {
-    const visibleCards = window.innerWidth <= 1024 ? 1 : 2;
-    if (index < cards.length - visibleCards) {
-        index++;
-        updateSlider();
+    function openOffCanvasMenu() {
+      if (!menu || !menuBackdrop) return;
+      menu.classList.remove("hidden-menu");
+      menuBackdrop.classList.remove("opacity-0", "invisible");
+      menuBackdrop.classList.add("opacity-100", "visible");
+      document.body.style.overflow = "hidden";
+      menuTimeline.timeScale(1).play(0);
     }
-};
 
-prevBtn.onclick = () => {
-    if (index > 0) {
-        index--;
-        updateSlider();
+    function closeOffCanvasMenu() {
+      if (!menu || !menuBackdrop) return;
+      menuTimeline.timeScale(1.4).reverse(0.15).then(() => {
+        menu.classList.add("hidden-menu");
+        menuBackdrop.classList.remove("opacity-100", "visible");
+        menuBackdrop.classList.add("opacity-0", "invisible");
+        document.body.style.overflow = "";
+      });
     }
-};
 
-// Update on resize to handle width changes correctly
-window.addEventListener("resize", updateSlider);
-// Initialize
-updateSlider();
+    menuToggle?.addEventListener("click", openOffCanvasMenu);
+    menuClose?.addEventListener("click", closeOffCanvasMenu);
+    menuBackdrop?.addEventListener("click", closeOffCanvasMenu);
 
-            // --- 3. GSAP ENTRANCE & SCROLL ANIMATIONS ---
-            gsap.to("#hero-title", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
-            gsap.to("#hero-subtitle", { opacity: 1, y: 0, duration: 1, delay: 0.8 });
-            gsap.to("#hero-cta", { opacity: 1, y: 0, duration: 1, delay: 1.1 });
+    // Close on link click
+    menuLinks.forEach(link => link.addEventListener("click", closeOffCanvasMenu));
 
-            const animElements = document.querySelectorAll('.scroll-animated-element');
-            animElements.forEach(el => {
-                gsap.to(el, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
-                    }
-                });
-            });
+    // Close on ESC
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeOffCanvasMenu();
+    });
+  });
+</script>
 
-            // --- 4. MODAL & OFF-CANVAS MENU LOGIC ---
-            const modal = document.getElementById('contact-modal');
-            const menu = document.getElementById('off-canvas-menu');
-            const menuToggle = document.getElementById('menu-toggle-button');
-            const menuClose = document.getElementById('menu-close-button');
-            const menuBackdrop = document.getElementById('menu-backdrop');
-            const menuLinks = document.querySelectorAll('#off-canvas-nav .menu-link');
-
-            const menuTimeline = gsap.timeline({ paused: true });
-            menuTimeline.from(menuLinks, {
-                x: 50,
-                opacity: 0,
-                duration: 0.6,
-                ease: "power1.out",
-                stagger: 0.15
-            });
-
-            window.openModal = function () {
-                if (modal) {
-                    modal.classList.remove('invisible', 'opacity-0');
-                    modal.classList.add('visible', 'opacity-100');
-                    document.body.style.overflow = 'hidden';
-                    closeOffCanvasMenu();
-                }
-            };
-
-            window.closeModal = function () {
-                if (modal) {
-                    modal.classList.remove('visible', 'opacity-100');
-                    modal.classList.add('invisible', 'opacity-0');
-                    document.body.style.overflow = '';
-                }
-            };
-
-            function openOffCanvasMenu() {
-                menu.classList.remove('hidden-menu');
-                menuBackdrop.classList.remove('opacity-0', 'invisible');
-                menuBackdrop.classList.add('opacity-100', 'visible');
-                document.body.style.overflow = 'hidden';
-                menuTimeline.timeScale(1).play(0);
-            }
-
-            function closeOffCanvasMenu() {
-                menuTimeline.timeScale(1.5).reverse().then(() => {
-                    menu.classList.add('hidden-menu');
-                    menuBackdrop.classList.remove('opacity-100', 'visible');
-                    menuBackdrop.classList.add('opacity-0', 'invisible');
-                    if (!modal || modal.classList.contains('invisible')) {
-                        document.body.style.overflow = '';
-                    }
-                });
-            }
-
-            menuToggle?.addEventListener('click', openOffCanvasMenu);
-            menuClose?.addEventListener('click', closeOffCanvasMenu);
-            menuBackdrop?.addEventListener('click', closeOffCanvasMenu);
-        });
-    </script>
+    
 </body>
 
 </html>

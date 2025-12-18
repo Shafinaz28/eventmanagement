@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maya Events - Contact Us</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -18,21 +19,23 @@
                 extend: {
                     colors: {
                         'gray-850': '#1f2937',
-                        'gray-950': '#0f172a'
+                        'gray-950': '#0f172a',
+                        'maya-blue': '#00A0E3',
+                        'maya-dark': '#2b2b2b'
                     }
                 }
             }
         }
     </script>
+
     <style>
-        /* Global Reset for robust responsiveness */
         html,
         body {
             width: 100%;
             min-width: 100%;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* Ensures no accidental horizontal scroll on mobile */
+            overflow-x: hidden;
             box-sizing: border-box;
         }
 
@@ -43,13 +46,10 @@
         }
 
         .bg-hero {
-            /* NOTE: Using original local file path */
             background-image: url('./services/bgwrkimg.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-
-            /* FIX 3: Changed to min-height for flexible scaling */
             min-height: 60vh;
         }
 
@@ -59,24 +59,42 @@
             background-position: center;
         }
 
-        /* Custom Hamburger Button Style */
         .custom-hamburger {
             width: 60px;
             height: 60px;
-            background-color: white;
+            background: linear-gradient(135deg, #00A0E3, #2b2b2b);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s;
+            border-radius: 999px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
 
-        .custom-hamburger .bar {
-            background-color: black;
+        .custom-hamburger:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
         }
 
-        /* Off-Canvas Menu Styling */
+        .hamburger-lines {
+            width: 30px;
+            height: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hamburger-lines span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #ffffff;
+            border-radius: 999px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+        }
+
         #off-canvas-menu {
             transition: transform 0.3s ease-out;
         }
@@ -85,7 +103,6 @@
             transform: translateX(100%);
         }
 
-        /* GSAP Initial State Class */
         .scroll-animated-element {
             opacity: 0;
         }
@@ -94,6 +111,7 @@
 
 <body class="bg-gray-900 text-white font-sans antialiased">
 
+    <!-- Header -->
     <header class="fixed top-0 w-full z-50 bg-transparent py-3">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
             <div class="flex items-center">
@@ -102,61 +120,71 @@
                 </a>
             </div>
 
-            <div>
-                <button id="menu-toggle-button" class="relative custom-hamburger">
-                    <div class="space-y-1.5 w-8 h-8 flex flex-col justify-center items-center">
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                    </div>
-                </button>
-            </div>
+            <button id="menu-toggle-button" class="custom-hamburger" aria-label="Open Menu">
+                <div class="hamburger-lines">
+                    <span></span><span></span><span></span>
+                </div>
+            </button>
         </div>
     </header>
 
+    <!-- Off-canvas menu -->
     <div id="off-canvas-menu"
         class="fixed inset-y-0 right-0 w-64 max-w-[85%] sm:w-96 bg-gray-950/95 backdrop-blur-xl z-[90] shadow-2xl p-6 hidden-menu">
+
         <div class="flex justify-end mb-10">
-            <button id="menu-close-button" class="text-white hover:text-teal-400 transition-colors">
+            <button id="menu-close-button" class="text-white hover:text-cyan-300 transition-colors"
+                aria-label="Close Menu">
                 <i class="fas fa-times text-2xl"></i>
             </button>
         </div>
 
-        <nav class="space-y-6 text-xl">
+        <!-- ✅ NAV (like screenshot) -->
+        <nav id="off-canvas-nav" class="space-y-6 text-xl">
             <a href="index.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
-                <i class="fas fa-home w-6 mr-3"></i> Home
-            </a>
-            <a href="about.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
-                <i class="fas fa-info-circle w-6 mr-3"></i> About
-            </a>
-            <a href="services.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
-                <i class="fas fa-briefcase w-6 mr-3"></i> Services
-            </a>
-            <a href="gallery.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
-                <i class="fas fa-images w-6 mr-3"></i> Gallery
+                class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+                <i class="fas fa-home w-7 mr-3"></i> Home
             </a>
 
-            <a href="contact.html" class="block text-white hover:text-teal-400 transition-colors menu-link">
-                <i class="fas fa-envelope w-6 mr-3"></i> Contact
+            <a href="about.html"
+                class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+                <i class="fas fa-circle-info w-7 mr-3"></i> About
+            </a>
+
+            <a href="services.html"
+                class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+                <i class="fas fa-briefcase w-7 mr-3"></i> Services
+            </a>
+
+            <a href="gallery.html"
+                class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-4 menu-link">
+                <i class="fas fa-images w-7 mr-3"></i> Gallery
+            </a>
+
+            <!-- ✅ ACTIVE PAGE: Contact -->
+            <a href="contact.html"
+                class="block text-cyan-300 font-semibold transition-colors border-b border-white/10 pb-4 menu-link">
+                <i class="fas fa-envelope w-7 mr-3"></i> Contact
             </a>
         </nav>
 
-        <div class="mt-12 pt-6 border-t border-white/10">
-            <h4 class="text-lg font-semibold mb-3 text-blue-400">Request a Quote</h4>
-            <a href="contact.html"
-                class="cursor-pointer w-full inline-block text-center px-6 py-3 text-white bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg transition-all hover:opacity-90">
-                Plan Your Event
+        <!-- ✅ Request a Quote (below nav) -->
+        <!-- <div class="mt-10 pt-6 border-t border-white/10">
+            <h4 class="text-lg font-semibold mb-4 text-cyan-300 flex items-center gap-2">
+                <i class="fas fa-pen-to-square"></i> Request a Quote
+            </h4>
+
+            <a href="#contact-form"
+                class="w-full inline-flex items-center justify-center gap-3 px-6 py-3 text-white rounded-lg transition-all font-semibold"
+                style="background: linear-gradient(135deg, #00A0E3, #2b2b2b);">
+                <i class="fas fa-calendar-check"></i> Plan Your Event
             </a>
-        </div>
+        </div> -->
     </div>
 
-    <div id="menu-backdrop" class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300">
-    </div>
-
+    <!-- Backdrop -->
+    <div id="menu-backdrop"
+        class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300"></div>
 
     <main>
         <section id="home" class="bg-hero relative flex items-center justify-center min-h-[50vh]">
@@ -185,27 +213,32 @@
                         <p class="text-gray-400 mb-8">
                             Fill out the form below and we'll get back to you as soon as possible.
                         </p>
+
                         <form action="#" method="POST" class="space-y-6">
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
                                 <input type="text" id="name" name="name" required
-                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-300">
                             </div>
+
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email
                                     Address</label>
                                 <input type="email" id="email" name="email" required
-                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-300">
                             </div>
+
                             <div>
                                 <label for="message" class="block text-sm font-medium text-gray-300 mb-2">Your
                                     Message</label>
                                 <textarea id="message" name="message" rows="5" required
-                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-300"></textarea>
                             </div>
+
                             <button type="submit"
-                                class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold rounded-lg transform hover:scale-[1.01]">
-                                Send Message
+                                class="w-full px-6 py-3 text-white font-semibold rounded-lg transform hover:scale-[1.01] transition-all"
+                                style="background: linear-gradient(135deg, #00A0E3, #2b2b2b);">
+                                <i class="fas fa-paper-plane mr-2"></i>Send Message
                             </button>
                         </form>
                     </div>
@@ -215,28 +248,28 @@
                         <h2 class="text-3xl font-bold mb-4">Our Details</h2>
                         <ul class="space-y-6 text-gray-400">
                             <li class="flex items-start">
-                                <i class="fas fa-map-marker-alt text-blue-400 text-2xl mr-4 flex-shrink-0"></i>
+                                <i class="fas fa-location-dot text-cyan-300 text-2xl mr-4 flex-shrink-0"></i>
                                 <div>
                                     <h4 class="font-semibold text-white">Office Address</h4>
                                     <p>Bangalore, Karnataka</p>
                                 </div>
                             </li>
                             <li class="flex items-start">
-                                <i class="fas fa-phone-alt text-blue-400 text-2xl mr-4 flex-shrink-0"></i>
+                                <i class="fas fa-phone text-cyan-300 text-2xl mr-4 flex-shrink-0"></i>
                                 <div>
                                     <h4 class="font-semibold text-white">Phone Number</h4>
                                     <p>+91 866 029 6047</p>
                                 </div>
                             </li>
                             <li class="flex items-start">
-                                <i class="fas fa-envelope text-blue-400 text-2xl mr-4 flex-shrink-0"></i>
+                                <i class="fas fa-envelope-open-text text-cyan-300 text-2xl mr-4 flex-shrink-0"></i>
                                 <div>
                                     <h4 class="font-semibold text-white">Email Address</h4>
                                     <p>connect@mayaevents.in</p>
                                 </div>
                             </li>
                             <li class="flex items-start">
-                                <i class="fas fa-clock text-blue-400 text-2xl mr-4 flex-shrink-0"></i>
+                                <i class="fas fa-clock text-cyan-300 text-2xl mr-4 flex-shrink-0"></i>
                                 <div>
                                     <h4 class="font-semibold text-white">Office Hours</h4>
                                     <p>Mon - Fri: 9AM - 6PM IST</p>
@@ -244,6 +277,7 @@
                             </li>
                         </ul>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -263,106 +297,91 @@
         </section>
     </main>
 
-
-
+    <!-- Footer (unchanged) -->
     <footer class="bg-gray-800 border-t border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
                 <div>
-                    <img src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-12 w-auto mb-4">
-                    <p class="text-gray-400 mb-4">Crafting Experiences, Igniting Emotions.</p>
+                    <img id="logo-footer" src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo"
+                        class="h-12 w-auto mb-4">
+                    <p class="text-gray-300 mb-4"><i class="fas fa-wand-magic-sparkles mr-2"></i>Crafting Experiences,
+                        Igniting Emotions.</p>
                     <p class="text-gray-400 text-sm">
+                        <i class="fas fa-circle-info mr-2"></i>
                         Your premier partner for exceptional event planning, creative services, and brand experiences. A
                         proud unit of Trivexa Events and Promotions Pvt. Ltd.
                     </p>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-400 hover:text-blue-400 transition-colors">Home</a>
-                        </li>
-                        <li><a href="about.html" class="text-gray-400 hover:text-blue-400 transition-colors">About Us</a>
-                        </li>
-                        <li><a href="service.html" class="text-gray-400 hover:text-blue-400 transition-colors">Services</a></li>
-                        <li><a href="gallery.html" class="text-gray-400 hover:text-blue-400 transition-colors">Portfolio</a></li>
-                        <li><a href="contact.html" class="text-gray-400 hover:text-blue-400 transition-colors">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-semibold mb-4">Contact Us</h4>
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-link mr-2"></i>Quick Links</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li>📍 Bengaluru, Karnataka</li>
-                        <li>📞 +91 866 029 6047</li>
-                        <li>✉️ connect@mayaevents.in</li>
-                        <li>🕒 Mon - Fri: 9AM - 6PM IST</li>
+                        <li><i class="fas fa-house mr-2"></i><a href="index.html"
+                                class="hover:text-cyan-300 transition-colors">Home</a></li>
+                        <li><i class="fas fa-circle-info mr-2"></i><a href="about.html"
+                                class="hover:text-cyan-300 transition-colors">About Us</a></li>
+                        <li><i class="fas fa-briefcase mr-2"></i><a href="services.html"
+                                class="hover:text-cyan-300 transition-colors">Services</a></li>
+                        <li><i class="fas fa-images mr-2"></i><a href="gallery.html"
+                                class="hover:text-cyan-300 transition-colors">Portfolio</a></li>
+                        <li><i class="fas fa-envelope mr-2"></i><a href="contact.html"
+                                class="hover:text-cyan-300 transition-colors">Contact</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Stay Connected</h4>
-                    <p class="text-gray-400 mb-4 text-sm">Follow our journey of creative transformation.</p>
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-address-card mr-2"></i>Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-location-dot mr-2"></i>Bengaluru, Karnataka</li>
+                        <li><i class="fas fa-phone mr-2"></i>+91 866 029 6047</li>
+                        <li><i class="fas fa-envelope-open-text mr-2"></i>connect@mayaevents.in</li>
+                        <li><i class="fas fa-clock mr-2"></i>Mon - Fri: 9AM - 6PM IST</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-signal mr-2"></i>Stay Connected</h4>
+                    <p class="text-gray-400 mb-4 text-sm"><i class="fas fa-heart mr-2"></i>Follow our journey of
+                        creative transformation.</p>
                     <div class="flex space-x-4 text-2xl">
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="Facebook"><i
                                 class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
-                                class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors"
+                            aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="LinkedIn"><i
                                 class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="YouTube"><i
                                 class="fab fa-youtube"></i></a>
                     </div>
                 </div>
+
             </div>
 
             <div class="border-t border-gray-700 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm">© 2025 Maya Adfinity. All rights reserved.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Terms of Service</a>
+                <p class="text-gray-400 text-sm"><i class="fas fa-copyright mr-2"></i>2025 Maya Adfinity. All rights
+                    reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-gray-400">
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i
+                            class="fas fa-shield-halved mr-2"></i>Privacy Policy</a>
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i
+                            class="fas fa-file-contract mr-2"></i>Terms of Service</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // GSAP Registration
         gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-        // Note: Modal HTML removed, but JS functions are kept for general compatibility.
-        const modal = document.getElementById('contact-modal');
-        let popupTimer;
-
-        // Define modal functions (these remain as no-ops or redirect to contact.html)
-        window.openModal = () => { /* Redirect to contact page */ window.location.href = 'contact.html'; };
-        window.closeModal = () => { };
-
-        // Timer function (disabled)
-        function startPopupTimer() {
-            clearInterval(popupTimer);
-        }
-
-        // === OFF-CANVAS MENU LOGIC ===
         const menu = document.getElementById('off-canvas-menu');
         const menuToggle = document.getElementById('menu-toggle-button');
         const menuClose = document.getElementById('menu-close-button');
         const menuBackdrop = document.getElementById('menu-backdrop');
         const menuLinks = document.querySelectorAll('#off-canvas-menu a');
 
-        // GSAP Timeline for Menu Links (Slide from Right)
-        const menuTimeline = gsap.timeline({
-            paused: true
-        });
-
-        menuTimeline.from(menuLinks, {
-            x: 50,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power1.out",
-            stagger: 0.15
-        });
+        const menuTimeline = gsap.timeline({ paused: true });
+        menuTimeline.from(menuLinks, { x: 50, opacity: 0, duration: 0.6, ease: "power1.out", stagger: 0.12 });
 
         function openOffCanvasMenu() {
             if (!menu || !menuBackdrop) return;
@@ -375,7 +394,7 @@
 
         function closeOffCanvasMenu() {
             if (!menu || !menuBackdrop) return;
-            menuTimeline.timeScale(1.5).reverse(0.4).then(() => {
+            menuTimeline.timeScale(1.5).reverse(0.25).then(() => {
                 menu.classList.add('hidden-menu');
                 menuBackdrop.classList.remove('opacity-100', 'visible');
                 menuBackdrop.classList.add('opacity-0', 'invisible');
@@ -383,159 +402,56 @@
             });
         }
 
-        // === GSAP SCROLL ANIMATION LOGIC ===
         function initGSAPAnimations() {
-
-            // 0. Initial State Setup
             const formElements = document.querySelectorAll('#contact-form');
             const detailsElements = document.querySelectorAll('#contact-details');
             const mapElements = document.querySelectorAll('#map-container');
             const mapTitle = document.querySelectorAll('.map-title');
-            const ctaElements = document.querySelectorAll('.bg-cta .relative > *');
             const heroContent = document.querySelectorAll('#hero-content > *');
 
-            // Set initial state for form and details (x slide)
-            gsap.set(formElements, {
-                opacity: 0,
-                x: -100
-            });
-            gsap.set(detailsElements, {
-                opacity: 0,
-                x: 100
-            });
-            gsap.set(mapElements, {
-                opacity: 0,
-                y: 50
-            });
-            gsap.set(mapTitle, {
-                opacity: 0,
-                y: 30
-            });
-            gsap.set(ctaElements, {
-                opacity: 0,
-                y: 30
-            });
+            gsap.set(formElements, { opacity: 0, x: -100 });
+            gsap.set(detailsElements, { opacity: 0, x: 100 });
+            gsap.set(mapElements, { opacity: 0, y: 50 });
+            gsap.set(mapTitle, { opacity: 0, y: 30 });
 
-            // 1. Hero Content Initial Load
             gsap.from(heroContent, {
-                opacity: 0,
-                y: 30,
-                stagger: 0.2,
-                duration: 1,
-                delay: 0.3,
-                ease: "power2.out"
+                opacity: 0, y: 30, stagger: 0.2, duration: 1, delay: 0.3, ease: "power2.out"
             });
 
-            // 2. Form and Details Section Animation (Slide In)
             const contactTimeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: "#contact-form-details",
-                    start: "top 75%",
-                    toggleActions: "play reverse play reverse",
-                }
+                scrollTrigger: { trigger: "#contact-form-details", start: "top 75%", toggleActions: "play reverse play reverse" }
             });
 
-            contactTimeline.to(formElements, {
-                x: 0,
-                opacity: 1,
-                duration: 1.2,
-                ease: "power2.out"
-            }, 0);
-            contactTimeline.to(detailsElements, {
-                x: 0,
-                opacity: 1,
-                duration: 1.2,
-                ease: "power2.out"
-            }, 0);
+            contactTimeline.to(formElements, { x: 0, opacity: 1, duration: 1.2, ease: "power2.out" }, 0);
+            contactTimeline.to(detailsElements, { x: 0, opacity: 1, duration: 1.2, ease: "power2.out" }, 0);
 
-
-            // 3. Map Section Animation (Fade Up)
             gsap.to(mapTitle, {
-                y: 0,
-                opacity: 1,
-                duration: 1.0,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: "#map-section",
-                    start: "top 85%",
-                    toggleActions: "play reverse play reverse",
-                }
+                y: 0, opacity: 1, duration: 1.0, ease: "power2.out",
+                scrollTrigger: { trigger: "#map-section", start: "top 85%", toggleActions: "play reverse play reverse" }
             });
+
             gsap.to(mapElements, {
-                y: 0,
-                opacity: 1,
-                duration: 1.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: "#map-section",
-                    start: "top 75%",
-                    toggleActions: "play reverse play reverse",
-                }
+                y: 0, opacity: 1, duration: 1.2, ease: "power2.out",
+                scrollTrigger: { trigger: "#map-section", start: "top 75%", toggleActions: "play reverse play reverse" }
             });
 
-
-            // 4. CTA Section Animation (Staggered Fade Up)
-            const ctaTimelineAnimation = gsap.timeline({
-                scrollTrigger: {
-                    trigger: ".bg-cta",
-                    start: "top 80%",
-                    toggleActions: "play reverse play reverse",
-                }
-            });
-
-            // Stagger CTA elements in
-            ctaTimelineAnimation.to(document.querySelectorAll('.bg-cta .relative > h2, .bg-cta .relative > p'), {
-                y: 0,
-                opacity: 1,
-                stagger: 0.2,
-                duration: 1.0,
-                ease: "power2.out"
-            }, 0);
-            ctaTimelineAnimation.to(document.querySelectorAll('.bg-cta .relative a'), {
-                y: 0,
-                opacity: 1,
-                stagger: 0.2,
-                duration: 0.8,
-                ease: "power2.out"
-            }, 0.4);
-
-            // Looping Animation for Logo (for visual consistency across pages)
             gsap.to(["#logo-main", "#logo-footer"], {
-                rotation: 1,
-                scale: 1.01,
-                duration: 3,
-                ease: "sine.inOut",
-                repeat: -1,
-                yoyo: true
+                rotation: 1, scale: 1.01, duration: 3, ease: "sine.inOut", repeat: -1, yoyo: true
             });
         }
 
-
-        // === INITIALIZATION AND EVENT LISTENERS ===
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize GSAP animations
             initGSAPAnimations();
 
-            // Off-Canvas Menu Listeners
-            const menuToggle = document.getElementById('menu-toggle-button');
-            const menuClose = document.getElementById('menu-close-button');
-            const menuBackdrop = document.getElementById('menu-backdrop');
+            if (menuToggle) menuToggle.addEventListener('click', openOffCanvasMenu);
+            if (menuClose) menuClose.addEventListener('click', closeOffCanvasMenu);
+            if (menuBackdrop) menuBackdrop.addEventListener('click', closeOffCanvasMenu);
 
-            if (menuToggle) {
-                menuToggle.addEventListener('click', openOffCanvasMenu);
-            }
-            if (menuClose) {
-                menuClose.addEventListener('click', closeOffCanvasMenu);
-            }
-            if (menuBackdrop) {
-                menuBackdrop.addEventListener('click', closeOffCanvasMenu);
-            }
-            // Close menu when a navigation link is clicked
+            // ✅ close menu when any link clicked (like screenshot behavior)
             document.querySelectorAll('#off-canvas-menu a').forEach(link => {
                 link.addEventListener('click', closeOffCanvasMenu);
             });
 
-            // Smooth scrolling for anchor links 
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -543,14 +459,15 @@
                     if (target) {
                         gsap.to(window, {
                             duration: 1,
-                            scrollTo: {
-                                y: target,
-                                offsetY: 80 // Offset for the fixed header
-                            },
+                            scrollTo: { y: target, offsetY: 80 },
                             ease: "power2.inOut"
                         });
                     }
                 });
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') closeOffCanvasMenu();
             });
         });
     </script>

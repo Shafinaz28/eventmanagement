@@ -2,57 +2,36 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maya About Us</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maya Events - Portfolio Gallery</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'gray-850': '#1f2937',
-                        'gray-950': '#0f172a',
-                        'maya-red': '#6e3c4b',
-                    },
-                    keyframes: {
-                        // Keep only CSS-only keyframes not controlled by GSAP
-                        contactOverlayZoom: {
-                            '0%': {
-                                transform: 'translate(-50%, -50%) scale(0.8)',
-                                opacity: '0'
-                            },
-                            '100%': {
-                                transform: 'translate(-50%, -50%) scale(1)',
-                                opacity: '1'
-                            },
-                        },
-                        'scroll-loop': {
-                            '0%': {
-                                transform: 'translateX(0)'
-                            },
-                            '100%': {
-                                transform: 'translateX(-50%)'
-                            },
-                        }
+                        "gray-950": "#0f172a",
+                        "maya-blue": "#00A0E3",
+                        "maya-dark": "#2b2b2b"
                     }
                 }
             }
-        }
+        };
     </script>
     <style>
-        /* Global Reset for better responsiveness and to prevent horizontal overflow */
         html,
         body {
             width: 100%;
-            min-width: 100%;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* Crucial for preventing horizontal scroll on mobile */
+            overflow-x: hidden;
             box-sizing: border-box;
         }
 
@@ -82,7 +61,53 @@
             background-size: cover;
             background-position: center;
         }
+        /* Hamburger (gradient + centered bold white lines) */
+        .custom-hamburger {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00A0E3, #2b2b2b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+            transition: transform .2s ease, filter .2s ease;
+        }
 
+        .custom-hamburger:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .hamburger-lines {
+            width: 30px;
+            height: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hamburger-lines span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            /* bold */
+            background: #fff;
+            /* white */
+            border-radius: 999px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+        }
+
+        /* Off-canvas */
+        #off-canvas-menu {
+            transition: transform .3s ease-out;
+        }
+
+        #off-canvas-menu.hidden-menu {
+            transform: translateX(100%);
+        }
         /* Custom Card Gradient Border (for Vision/Mission) */
         .card-vision {
             border: 3px solid transparent;
@@ -260,69 +285,73 @@
     </style>
 </head>
 
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white font-sans antialiased">
 
+    <!-- Header -->
     <header class="fixed top-0 w-full z-50 bg-transparent py-3">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
-            <div class="header-logo-container"> <a href="index.html">
-                    <img id="logo-main" src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-12 sm:h-16 w-auto">
+            <div class="flex items-center">
+                <a href="index.html">
+                    <img id="logo-main" src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-16 w-auto">
                 </a>
             </div>
 
-            <div>
-                <button id="menu-toggle-button" class="relative custom-hamburger">
-                    <div class="space-y-1.5 w-8 h-8 flex flex-col justify-center items-center">
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                        <span class="bar block w-6 h-0.5 transition-all duration-300"></span>
-                    </div>
-                </button>
-            </div>
+            <button id="menu-toggle-button" class="custom-hamburger" aria-label="Open Menu">
+                <div class="hamburger-lines">
+                    <span></span><span></span><span></span>
+                </div>
+            </button>
         </div>
     </header>
 
+    <!-- Off-canvas menu -->
     <div id="off-canvas-menu"
-        class="fixed inset-y-0 right-0 w-64 max-w-[80%] sm:w-96 bg-gray-950/95 backdrop-blur-xl z-[50] shadow-2xl p-6 hidden-menu">
+        class="fixed inset-y-0 right-0 w-64 max-w-[85%] sm:w-96 bg-gray-950/95 backdrop-blur-xl z-[90] shadow-2xl p-6 hidden-menu">
         <div class="flex justify-end mb-10">
-            <button id="menu-close-button" class="text-white hover:text-teal-400 transition-colors">
+            <button id="menu-close-button" class="text-white hover:text-cyan-300 transition-colors"
+                aria-label="Close Menu">
                 <i class="fas fa-times text-2xl"></i>
             </button>
         </div>
 
         <nav class="space-y-6 text-xl">
             <a href="index.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
+                class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-3 menu-link">
                 <i class="fas fa-home w-6 mr-3"></i> Home
             </a>
             <a href="about.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
-                <i class="fas fa-info-circle w-6 mr-3"></i> About
+                class="block text-cyan-300 transition-colors border-b border-white/10 pb-3 menu-link">
+                <i class="fas fa-images w-6 mr-3"></i> About
             </a>
             <a href="services.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
+                class="block text-white hover:text-cyan-300 transition-colors border-b border-white/10 pb-3 menu-link">
                 <i class="fas fa-briefcase w-6 mr-3"></i> Services
             </a>
-            <a href="gallery.html"
-                class="block text-white hover:text-teal-400 transition-colors border-b border-white/10 pb-3 menu-link">
-                <i class="fas fa-images w-6 mr-3"></i> Gallery
+            <a href="gallery.html" class="block text-white hover:text-cyan-300 transition-colors menu-link">
+                <i class="fas fa-envelope mr-3"></i> Gallery
             </a>
-
-            <a href="contact.html" class="block text-white hover:text-teal-400 transition-colors menu-link">
-                <i class="fas fa-envelope w-6 mr-3"></i> Contact
+            <a href="contact.html" class="block text-white hover:text-cyan-300 transition-colors menu-link">
+                <i class="fas fa-envelope mr-3"></i> Contact
             </a>
         </nav>
 
-        <div class="mt-12 pt-6 border-t border-white/10">
-            <h4 class="text-lg font-semibold mb-3 text-blue-400">Get Started</h4>
-            <a onclick="openModal()"
-                class="cursor-pointer w-full inline-block text-center px-6 py-3 text-white bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg transition-all hover:opacity-90">
-                Plan Your Event
+        <!-- <div class="mt-12 pt-6 border-t border-white/10">
+            <h4 class="text-lg font-semibold mb-3 text-cyan-300">
+                <i class="fas fa-pen-to-square mr-2"></i> Request a Quote
+            </h4>
+            <a href="contact.html"
+                class="w-full inline-block text-center px-6 py-3 text-white rounded-lg transition-all"
+                style="background: linear-gradient(135deg, #00A0E3, #2b2b2b);">
+                <i class="fas fa-calendar-check mr-2"></i> Plan Your Event
             </a>
-        </div>
+        </div> -->
     </div>
 
-    <div id="menu-backdrop" class="fixed inset-0 bg-black/50 z-[49] opacity-0 invisible transition-opacity duration-300">
+    <div id="menu-backdrop" class="fixed inset-0 bg-black/50 z-40 opacity-0 invisible transition-opacity duration-300">
     </div>
+
+    <main>
+    
 
 
     <section id="hero-about" class="bg-hero relative flex items-center justify-center">
@@ -558,63 +587,73 @@
         </div>
     </section>
 
-        <footer class="bg-gray-800 border-t border-gray-700">
+      <footer class="bg-gray-800 border-t border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
                 <div>
                     <img src="assets/images/MAYA_LOGO.png" alt="Maya Adfinity Logo" class="h-12 w-auto mb-4">
-                    <p class="text-gray-400 mb-4">Crafting Experiences, Igniting Emotions.</p>
+                    <p class="text-gray-300 mb-2"><i class="fas fa-wand-magic-sparkles mr-2"></i>Crafting Experiences,
+                        Igniting Emotions.</p>
                     <p class="text-gray-400 text-sm">
-                        Your premier partner for exceptional event planning, creative services, and brand experiences. A
-                        proud unit of Trivexa Events and Promotions Pvt. Ltd.
+                        <i class="fas fa-circle-info mr-2"></i>
+                        Your premier partner for exceptional event planning, creative services, and brand experiences.
+                        A proud unit of Trivexa Events and Promotions Pvt. Ltd.
                     </p>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-400 hover:text-blue-400 transition-colors">Home</a>
-                        </li>
-                        <li><a href="about.html" class="text-gray-400 hover:text-blue-400 transition-colors">About Us</a>
-                        </li>
-                        <li><a href="service.html" class="text-gray-400 hover:text-blue-400 transition-colors">Services</a></li>
-                        <li><a href="gallery.html" class="text-gray-400 hover:text-blue-400 transition-colors">Portfolio</a></li>
-                        <li><a href="contact.html" class="text-gray-400 hover:text-blue-400 transition-colors">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-semibold mb-4">Contact Us</h4>
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-link mr-2"></i>Quick Links</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li>📍 Bengaluru, Karnataka</li>
-                        <li>📞 +91 866 029 6047</li>
-                        <li>✉️ connect@mayaevents.in</li>
-                        <li>🕒 Mon - Fri: 9AM - 6PM IST</li>
+                        <li><i class="fas fa-house mr-2"></i><a href="index.html"
+                                class="hover:text-cyan-300 transition-colors">Home</a></li>
+                        <li><i class="fas fa-circle-info mr-2"></i><a href="about.html"
+                                class="hover:text-cyan-300 transition-colors">About Us</a></li>
+                        <li><i class="fas fa-briefcase mr-2"></i><a href="services.html"
+                                class="hover:text-cyan-300 transition-colors">Services</a></li>
+                        <li><i class="fas fa-images mr-2"></i><a href="gallery.html"
+                                class="hover:text-cyan-300 transition-colors">Portfolio</a></li>
+                        <li><i class="fas fa-envelope mr-2"></i><a href="contact.html"
+                                class="hover:text-cyan-300 transition-colors">Contact</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Stay Connected</h4>
-                    <p class="text-gray-400 mb-4 text-sm">Follow our journey of creative transformation.</p>
-                    <div class="flex space-x-4 text-2xl">
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-address-card mr-2"></i>Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-location-dot mr-2"></i>Bengaluru, Karnataka</li>
+                        <li><i class="fas fa-phone mr-2"></i>+91 866 029 6047</li>
+                        <li><i class="fas fa-envelope-open-text mr-2"></i>connect@mayaevents.in</li>
+                        <li><i class="fas fa-clock mr-2"></i>Mon - Fri: 9AM - 6PM IST</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4"><i class="fas fa-signal mr-2"></i>Stay Connected</h4>
+                    <p class="text-gray-400 mb-4 text-sm"><i class="fas fa-heart mr-2"></i>Follow our journey of
+                        creative transformation.</p>
+                    <div class="flex space-x-5 text-2xl">
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="Facebook"><i
                                 class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
-                                class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors"
+                            aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="LinkedIn"><i
                                 class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors"><i
+                        <a href="#" class="text-gray-400 hover:text-cyan-300 transition-colors" aria-label="YouTube"><i
                                 class="fab fa-youtube"></i></a>
                     </div>
                 </div>
+
             </div>
 
             <div class="border-t border-gray-700 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm">© 2025 Maya Adfinity. All rights reserved.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">Terms of Service</a>
+                <p class="text-gray-400 text-sm"><i class="fas fa-copyright mr-2"></i>2025 Maya Adfinity. All rights
+                    reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-gray-400">
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i
+                            class="fas fa-shield-halved mr-2"></i>Privacy Policy</a>
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i
+                            class="fas fa-file-contract mr-2"></i>Terms of Service</a>
                 </div>
             </div>
         </div>
